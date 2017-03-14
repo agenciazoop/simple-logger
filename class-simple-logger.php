@@ -1,12 +1,15 @@
 <?php
 
 /**
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 class SimpleLogger {
 
 	function __construct ( $filepath ) {
+		if ( ! file_exists( dirname( $filepath ) ) ) {
+			mkdir( dirname( $filepath ), 0777, true );
+		}
 		$this->filepath = $filepath;
 	}
 
