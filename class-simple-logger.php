@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @version 1.2.0
+ * @version 1.2.1
  */
 
 class SimpleLogger {
@@ -9,13 +9,12 @@ class SimpleLogger {
 	protected $date_format = 'Y-m-d @ H:i:s';
 
 	function __construct ( $filepath ) {
-		$dir = dirname( $filepath );
+		if ( ! file_exists( $filepath ) ) {
+			$dir = dirname( $filepath );
+			$chmod_dir = defined( 'FS_CHMOD_DIR' ) ? FS_CHMOD_DIR : ( 0755 & ~umask() );
+			$chmod_file = defined( 'FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : ( 0644 & ~umask() );
 
-		if ( ! file_exists( $dir ) ) {
-			$chmod_dir = defined( 'FS_CHMOD_DIR' ) ? FS_CHMOD_DIR : ( 0755 & ~ umask() );
-			$chmod_file = defined( 'FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : ( 0644 & ~ umask() );
-
-			@mkdir( $dir, $chmod_dir, true );
+			if ( ! file_exists( $dir ) ) @mkdir( $dir, $chmod_dir, true );
 			@chmod( $filepath, $chmod_file );
 		}
 
