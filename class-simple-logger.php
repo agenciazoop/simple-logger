@@ -1,21 +1,36 @@
 <?php
 
 /**
- * @version 1.1.0
+ * @version 1.2.0
  */
 
 class SimpleLogger {
 
+	protected $date_format = 'Y-m-d @ H:i:s';
+
 	function __construct ( $filepath ) {
-		if ( ! file_exists( dirname( $filepath ) ) ) {
-			mkdir( dirname( $filepath ), 0777, true );
+		$dir = dirname( $filepath );
+
+		if ( ! file_exists( $dir ) ) {
+			$chmod_dir = defined( 'FS_CHMOD_DIR' ) ? FS_CHMOD_DIR : ( 0755 & ~ umask() );
+			$chmod_file = defined( 'FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : ( 0644 & ~ umask() );
+
+			@mkdir( $dir, $chmod_dir, true );
+			@chmod( $filepath, $chmod_file );
 		}
+
 		$this->filepath = $filepath;
 	}
 
-	function log ( $content = '' ) {
-		$content .= PHP_EOL;
+	function log ( $message = '' ) {
+		$content = date( $this->date_format ) . ' - ' . $message . PHP_EOL;
 		return file_put_contents( $this->filepath, $content, FILE_APPEND );
 	}
-	
+
+	function log_r ( $value = '', $message = '' ) {
+		$message = ! empty( $message ) ? $message . ' ' : '';
+		$result = $this->log( $message . print_r( $value, true ) );
+		if ( is_array( $value ) ) reset( $value );
+		return $result;
+	}
 }
