@@ -9,14 +9,20 @@
 $logger = new SimpleLogger( '/absolute/path/to/your/file.log' );
 
 // add your messages
-$logger->log( 'a log message' );
-$logger->log( 'another log message' );
+$logger->log( 'testing...' );
+$logger->log_r( [1, 2, 3, 4], 'logs with print_r:' );
 ```
 
 outputs on `/absolute/path/to/your/file.log`
 ```
-a log message
-another log message
+2017-05-31 @ 03:51:24 - testing...
+2017-05-31 @ 03:51:24 - logs with print_r: Array
+(
+    [0] => 1
+    [1] => 2
+    [2] => 3
+    [3] => 4
+)
 ```
 
 ## LICENSE
