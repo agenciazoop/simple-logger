@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @version 1.2.1
+ * @version 1.2.2
  */
 
 class SimpleLogger {
@@ -22,7 +22,7 @@ class SimpleLogger {
 	}
 
 	function log ( $message = '' ) {
-		$content = date( $this->date_format ) . ' - ' . $message . PHP_EOL;
+		$content = '[' . date( $this->date_format ) . '] ' . $message . PHP_EOL;
 		return file_put_contents( $this->filepath, $content, FILE_APPEND );
 	}
 
