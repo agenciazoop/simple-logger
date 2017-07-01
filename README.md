@@ -27,7 +27,7 @@ $logger->add( 0 );
 $logger->add( '0' );
 ```
 
-outputs on `/absolute/path/to/your/file.log`
+content of `/absolute/path/to/your/file.log`
 ```
 [2017-07-01 @ 01:25:23] testing...
 [2017-07-01 @ 01:25:23] Array
@@ -48,6 +48,11 @@ outputs on `/absolute/path/to/your/file.log`
 [2017-07-01 @ 01:25:23] NULL
 [2017-07-01 @ 01:25:23] 0
 [2017-07-01 @ 01:25:23] 0
+```
+
+*Note: you can use the `can_write` method to check if the log file is writable.*
+```php
+$is_writable = $logger->can_write();
 ```
 
 ## LICENSE
