@@ -1,6 +1,6 @@
 <?php
 /**
- * @version 1.3.0
+ * @version 2.0.0
  */
 class SimpleLogger {
 
@@ -11,41 +11,53 @@ class SimpleLogger {
 			$dir = dirname( $filepath );
 			$chmod_dir = defined( 'FS_CHMOD_DIR' ) ? FS_CHMOD_DIR : ( 0775 & ~umask() );
 			$chmod_file = defined( 'FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : ( 0664 & ~umask() );
-			if ( ! file_exists( $dir ) ) @mkdir( $dir, $chmod_dir, true );
+
+			if ( ! file_exists( $dir ) ) {
+				@mkdir( $dir, $chmod_dir, true );
+			}
 			@chmod( $filepath, $chmod_file );
 		}
 		$this->filepath = $filepath;
 	}
 
-	public function log ( $message ) {
-		if ( ! $this->is_printable( $message ) ) {
-			$message = 'NULL';
-		} elseif ( is_array( $message ) ) {
-			$message = implode( ' ', $message );
-		}
-		return $this->write( '[' . date( $this->date_format ) . '] ' . $message );
-	}
+	public function add ( $data, $readable = false, $description = null ) {
+		$message = '[' . date( $this->date_format ) . '] ';
 
-	public function log_r ( $value = '', $description = '', $break = false ) {
-		$message = '';
 		if ( ! empty( $description ) ) {
 			$message .= $description . ': ';
-			if ( $break === true ) {
-				$message .= PHP_EOL;
+		}
+
+		if ( $this->is_printable( $data ) ) { 
+			$message .= $readable ? print_r( $data, true ) : $data;
+			if ( is_array( $data ) ) {
+				reset( $data );
 			}
+		} else {
+			$message .= 'NULL';
 		}
-		$message .= $this->is_printable( $value ) ? print_r( $value, true ) : 'NULL';
-		if ( is_array( $value ) ) {
-			reset( $value );
-		}
-		return $this->log( $message );
+
+		return $this->write( $message );
 	}
-	
+
 	protected function is_printable ( $value ) {
-		return ! ( empty( $value ) && ! is_numeric( $value ) );
+		return ! empty( $value ) || is_numeric( $value );
 	}
-	
+
 	protected function write ( $content ) {
 		return file_put_contents( $this->filepath, $content . PHP_EOL, FILE_APPEND );
 	}
 }
+
+/*
+// use to log in text or a console
+class ConsoleLogger extends SimpleLogger {
+    public function __construct () {
+        // do nothing
+	}
+	
+	protected function write ( $content ) {
+		echo $content . PHP_EOL;
+		return true;
+	}
+}
+*/
