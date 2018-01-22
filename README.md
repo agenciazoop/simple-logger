@@ -56,4 +56,4 @@ $is_writable = $logger->can_write();
 ```
 
 ## LICENSE
-MIT License &copy; 2017 Agência Zoop
+MIT License &copy; 2018 Luiz Bills
